@@ -1,0 +1,39 @@
+ body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f3f6; /* Fundo claro suave */
+        }
+        /* Estilização para o contêiner principal, limitando a largura para simular um mobile */
+        #app-container {
+            max-width: 450px;
+            min-height: 100vh;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+        }
+        /* Estilos personalizados para os botões de humor */
+        .mood-button {
+            transition: all 0.3s ease;
+            filter: grayscale(100%);
+            opacity: 0.6;
+            cursor: pointer;
+        }
+        .mood-button.selected {
+            filter: grayscale(0%);
+            opacity: 1;
+            box-shadow: 0 5px 15px rgba(255, 100, 100, 0.4);
+            transform: scale(1.05);
+            border-color: #ff5757;
+        }
+        /* Estilo para o botão de ação (gradiente e sombra) */
+        #submit-btn {
+            background-image: linear-gradient(to right, #ff5757 0%, #ff8989 100%);
+            box-shadow: 0 10px 20px rgba(255, 87, 87, 0.5);
+            transition: all 0.3s;
+        }
+        #submit-btn:hover {
+            box-shadow: 0 8px 15px rgba(255, 87, 87, 0.8);
+        }
+        /* Estilo para o resultado da sugestão */
+        .result-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            transition: all 0.5s ease-in-out;
+        }
