@@ -24,17 +24,17 @@
             <h2 class="text-2xl font-bold text-gray-800">1. Como você se sente hoje?</h2>
             <div id="mood-selector" class="grid grid-cols-4 gap-3">
                 <!-- Botões de Humor (Emojis) -->
-                <button data-mood="Alegre" class="mood-button p-3 bg-red-50 border-2 border-red-200 rounded-xl text-5xl flex items-center justify-center" aria-label="Alegre">
-                    😄
+                <button data-mood="Feliz" class="mood-button p-3 bg-red-50 border-2 border-red-200 rounded-xl text-5xl flex items-center justify-center" aria-label="Alegre">
+                    😀
                 </button>
                 <button data-mood="Cansado" class="mood-button p-3 bg-red-50 border-2 border-red-200 rounded-xl text-5xl flex items-center justify-center" aria-label="Cansado">
                     😴
                 </button>
-                <button data-mood="Aventureiro" class="mood-button p-3 bg-red-50 border-2 border-red-200 rounded-xl text-5xl flex items-center justify-center" aria-label="Aventureiro">
+                <button data-mood="Animado" class="mood-button p-3 bg-red-50 border-2 border-red-200 rounded-xl text-5xl flex items-center justify-center" aria-label="Aventureiro">
                     🤩
                 </button>
-                <button data-mood="Confortável" class="mood-button p-3 bg-red-50 border-2 border-red-200 rounded-xl text-5xl flex items-center justify-center" aria-label="Confortável">
-                    😌
+                <button data-mood="Neutro " class="mood-button p-3 bg-red-50 border-2 border-red-200 rounded-xl text-5xl flex items-center justify-center" aria-label="Confortável">
+                    😐
                 </button>
             </div>
         </section>
@@ -88,173 +88,126 @@
     </div>
 
     <script>
-        let selectedMood = null;
-        const resultSection = document.getElementById('result-section');
-        const recommendationResult = document.getElementById('recommendation-result');
-        const resultTitle = document.getElementById('result-title');
-        const resultText = document.getElementById('result-text');
-        const submitBtn = document.getElementById('submit-btn');
+       
+    let selectedMood = null;
+    const resultSection = document.getElementById('result-section');
+    const recommendationResult = document.getElementById('recommendation-result');
+    const resultTitle = document.getElementById('result-title');
+    const resultText = document.getElementById('result-text');
+    const submitBtn = document.getElementById('submit-btn');
 
-        /**
-         * FUNÇÃO PARA CONFIGURAR A SELEÇÃO DE HUMOR (VISUAL APENAS)
-         */
-        function setupMoodSelector() {
-            document.getElementById('mood-selector').addEventListener('click', (event) => {
-                const button = event.target.closest('.mood-button');
-                if (button) {
-                    // Desseleciona o anterior
-                    document.querySelectorAll('.mood-button').forEach(btn => {
-                        btn.classList.remove('selected');
-                    });
-                    
-                    // Seleciona o novo
-                    selectedMood = button.dataset.mood;
-                    button.classList.add('selected');
-                }
-            });
+    function setupMoodSelector() {
+        document.getElementById('mood-selector').addEventListener('click', (event) => {
+            const button = event.target.closest('.mood-button');
+            if (button) {
+                document.querySelectorAll('.mood-button').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+
+                selectedMood = button.dataset.mood;
+                button.classList.add('selected');
+            }
+        });
+    }
+
+    function simulateRecommendation() {
+        const cuisine = document.getElementById('cuisine').value;
+        const notes = document.getElementById('notes').value.trim() || 'Nenhuma nota especial';
+        const mood = selectedMood || 'Neutro';
+
+        if (!selectedMood) {
+            resultSection.classList.remove('hidden');
+            resultTitle.textContent = "Aguardando seu Humor...";
+            resultText.innerHTML = "Por favor, toque em um dos emojis no Passo 1 para que a IA possa entender suas necessidades.";
+            recommendationResult.classList.add('bg-yellow-50', 'border-yellow-300');
+            recommendationResult.classList.remove('bg-white', 'border-gray-200');
+            return;
         }
 
-        /**
-         * FUNÇÃO PARA SIMULAR O RESULTADO
-         */
-        function simulateRecommendation() {
-            const cuisine = document.getElementById('cuisine').value;
-            const notes = document.getElementById('notes').value.trim() || 'Nenhuma nota especial';
-            const mood = selectedMood || 'Neutro';
+        let title = '';
+        let suggestion = '';
 
-            if (!selectedMood) {
-                // Alerta suave para seleção de humor
-                resultSection.classList.remove('hidden');
-                resultTitle.textContent = "Aguardando seu Humor...";
-                resultText.innerHTML = "Por favor, toque em um dos emojis no Passo 1 para que a IA possa começar a entender suas necessidades emocionais e culinárias.";
-                recommendationResult.classList.add('bg-yellow-50', 'border-yellow-300');
-                recommendationResult.classList.remove('bg-white', 'border-gray-200');
-                return;
-            }
-
-            // Variáveis de Sugestão
-            let title = '';
-            let suggestion = '';
-
-            // --- LÓGICA DE SIMULAÇÃO(CRUZANDO HUMOR E CULINÁRIA) ---
-
-            if (mood === 'Cansado') {
-                //Sugestões que respeitam a Culinária
-                if (cuisine === 'Italiana') {
-                    title = 'Macarrão Simples com Manteiga e Parmesão';
-                    suggestion = `Com o humor **Cansado** e a escolha **Italiana**, sugerimos um prato que conforta e é fácil de preparar: Macarrão (qualquer formato) com manteiga e muito parmesão. É rápido, cremoso e ideal para recarregar as energias com baixo esforço.`;
-                } else if (cuisine === 'Japonesa') {
-                    title = 'Ramen Confortável (Udon/Sopa)';
-                    suggestion = `O humor **Cansado** e a culinária **Japonesa** combinam com o caldo quente e nutritivo do Ramen ou Udon. É aconchegante e perfeito para relaxar.`;
-                } else if (cuisine === 'Brasileira') {
-                    title = 'Caldo de Feijão ou Caldinho de Mandioca';
-                    suggestion = `Para o humor **Cansado** na culinária **Brasileira**, um Caldinho de Feijão ou um Caldo de Mandioca (Aipim) são o conforto ideal. Quente, nutritivo e familiar.`;
-                } else if (cuisine === 'Mexicana') {
-                    title = 'Quesadilla Simples de Queijo';
-                    suggestion = `Se o humor é **Cansado** e a escolha é **Mexicana**, a Quesadilla de queijo é rápida, saborosa e exige pouco preparo. Perfeita para um lanche reconfortante.`;
-                } else if (cuisine === 'Vegetariana') {
-                    title = 'Creme de Legumes e Pão Integral';
-                    suggestion = `Com o humor **Cansado** e foco **Vegetariano**, um Creme de Legumes suave e nutritivo com uma fatia de pão integral é a pedida. Alivia o estresse e nutre o corpo.`;
-                } else {
-                    // Culinária Qualquer/Outra
-                    title = 'Sopa de Tomate com Sanduíche Quente';
-                    suggestion = `Seu humor **Cansado** pede uma combinação clássica de conforto: Sopa de Tomate e um Sanduíche de queijo quente. Fácil, familiar e acolhedor. Culinária escolhida: **${cuisine}**.`;
-                }
-
-            } else if (mood === 'Alegre') {
-                // Sugestões que respeitam a Culinária
-                if (cuisine === 'Italiana') {
-                    title = 'Massa Fresca com Molho Pesto';
-                    suggestion = `O humor **Alegre** e a culinária **Italiana** combinam com cores vibrantes e sabores frescos! Sugerimos uma Massa (como fusilli ou penne) com um Molho Pesto caseiro. É uma refeição leve, cheia de vida e perfeita para um dia feliz.`;
-                } else if (cuisine === 'Japonesa') {
-                    title = 'Combinado de Sushi Colorido';
-                    suggestion = `Se o humor é **Alegre** e a escolha é **Japonesa**, celebre com um combinado de sushi fresco e bem colorido! A apresentação é vibrante e os sabores leves elevam o bom humor.`;
-                } else if (cuisine === 'Brasileira') {
-                    title = 'Acarajé ou Tapioca Recheada';
-                    suggestion = `Para o humor **Alegre** na culinária **Brasileira**, sugerimos algo festivo e regional, como Acarajé (se disponível) ou uma Tapioca com recheios variados. Comida de rua vibrante!`;
-                } else if (cuisine === 'Mexicana') {
-                    title = 'Tacos e Guacamole';
-                    suggestion = `O humor **Alegre** e a culinária **Mexicana** são a combinação perfeita. Sugerimos Tacos para montar com guacamole. É social, divertido e delicioso.`;
-                } else {
-                    title = 'Hambúrguer Gourmet Artesanal';
-                    suggestion = `O humor **Alegre** merece uma recompensa. Sugerimos um Hambúrguer Gourmet artesanal, com ingredientes criativos e batatas fritas crocantes. É indulgente e satisfatório. Culinária escolhida: **${cuisine}**.`;
-                }
-
-            } else if (mood === 'Aventureiro') {
-                // Sugestões que respeitam a Culinária
-                if (cuisine === 'Italiana') {
-                    title = 'Prato Regional Desconhecido (Ex: Polenta com Ragu)';
-                    suggestion = `Seu lado **Aventureiro** na **Italiana** pede algo além da pizza: explore pratos regionais, como uma Polenta cremosa com Ragu de linguiça ou Cacio e Pepe. Sabores intensos e autênticos!`;
-                } else if (cuisine === 'Japonesa') {
-                    title = 'Comida de Rua - Takoyaki ou Okonomiyaki';
-                    suggestion = `O lado **Aventureiro** na culinária **Japonesa** pode explorar comidas de rua como Takoyaki (bolinhos de polvo) ou Okonomiyaki (panqueca salgada japonesa). Experiências únicas!`;
-                } else if (cuisine === 'Brasileira') {
-                    title = 'Culinária Nordestina (Baião de Dois ou Moqueca)';
-                    suggestion = `Para o humor **Aventureiro** na **Brasileira**, mergulhe nos sabores do Nordeste! Sugerimos Baião de Dois (arroz com feijão, queijo e carne) ou uma Moqueca de peixe ou camarão.`;
-                } else if (cuisine === 'Mexicana') {
-                    title = 'Pimenta Forte: Sopa Azteca com Molho Habanero';
-                    suggestion = `A **Aventura** **Mexicana** exige pimenta! Sugerimos uma Sopa Azteca com um toque extra de molho Habanero. Prepare-se para uma explosão de sabor e calor.`;
-                } else {
-                    title = 'Comida de Rua Tailandesa ou Coreana';
-                    suggestion = `Seu lado **Aventureiro** pede sabores exóticos. Que tal explorar a culinária Tailandesa (Pad Thai picante) ou Coreana (Bibimbap)? Procure um restaurante autêntico! Culinária escolhida: **${cuisine}**.`;
-                }
-
-            } else if (mood === 'Confortável') {
-                // Sugestões que respeitam a Culinária
-                if (cuisine === 'Italiana') {
-                    title = 'Lasanha à Bolonhesa Caseira';
-                    suggestion = `O clima **Confortável** e a **Italiana** pedem um prato que leva tempo e amor: Lasanha à Bolonhesa. Camadas de massa, molho e queijo para um abraço gastronômico.`;
-                } else if (cuisine === 'Japonesa') {
-                    title = 'Karê (Curry Japonês)';
-                    suggestion = `Para o humor **Confortável** e a **Japonesa**, sugerimos Karê (Curry Japonês). É suave, rico em sabor e servido com arroz branco, sendo a Comfort Food perfeita no Japão.`;
-                } else if (cuisine === 'Brasileira') {
-                    title = 'Strogonoff Clássico com Batata Palha';
-                    suggestion = `O clima **Confortável** na **Brasileira** pede um abraço em forma de comida. Strogonoff de carne ou frango (ou cogumelos se for vegetariano) com arroz e batata palha é a pedida perfeita.`;
-                } else if (cuisine === 'Mexicana') {
-                    title = 'Chilli Con Carne ou Vegano';
-                    suggestion = `Para o humor **Confortável** na culinária **Mexicana**, o Chilli con Carne (ou vegetariano com feijão e vegetais) é um prato quente, robusto e que aquece a alma.`;
-                } else {
-                    title = 'Strogonoff Clássico com Batata Palha';
-                    suggestion = `O clima **Confortável** pede uma Comfort Food clássica. Strogonoff (com o tipo de carne que preferir) com arroz e batata palha. É familiar e garante aquela sensação de lar. Culinária escolhida: **${cuisine}**.`;
-                }
-
+        // ----------------- SUGESTÕES -----------------
+        if (mood === 'Cansado') {
+            if (cuisine === 'Italiana') {
+                title = 'Macarrão Simples com Manteiga e Parmesão';
+                suggestion = `O humor <strong>${mood}</strong> e a culinária Italiana combinam com um prato simples e reconfortante: macarrão com manteiga e parmesão.`;
+            } else if (cuisine === 'Japonesa') {
+                title = 'Ramen Confortável (Udon/Sopa)';
+                suggestion = `O humor <strong>${mood}</strong> e a culinária Japonesa combinam com o caldo quente e nutritivo do Ramen ou Udon. É aconchegante e perfeito para relaxar.`;
+            } else if (cuisine === 'Brasileira') {
+                title = 'Caldo de Feijão ou Caldinho de Mandioca';
+                suggestion = `O humor <strong>${mood}</strong> pede algo quente e nutritivo. Um caldo de feijão ou de mandioca é perfeito.`;
             } else {
-                 title = 'Sugestão do Dia: Salada de Verão Refrescante';
-                suggestion = `Para um humor **Neutro**, sugerimos algo leve e equilibrado: uma Salada de Verão com folhas verdes, frutas e um vinagrete cítrico. É nutritivo e não compromete seu próximo humor. Culinária escolhida: **${cuisine}**.`;
+                title = 'Sopa de Tomate com Sanduíche Quente';
+                suggestion = `O humor <strong>${mood}</strong> combina com uma sopa de tomate acompanhada de um sanduíche quente. Simples e reconfortante.`;
             }
 
+        } else if (mood === 'Feliz') {
+            if (cuisine === 'Italiana') {
+                title = 'Massa Fresca com Molho Pesto';
+                suggestion = `O humor <strong>${mood}</strong> e a culinária Italiana pedem um prato leve e vibrante: massa fresca com molho pesto.`;
+            } else if (cuisine === 'Japonesa') {
+                title = 'Combinado de Sushi Colorido';
+                suggestion = `O humor <strong>${mood}</strong> combina perfeitamente com um sushi variado e colorido.`;
+            } else {
+                title = 'Hambúrguer Gourmet Artesanal';
+                suggestion = `O humor <strong>${mood}</strong> merece algo especial. Um hambúrguer gourmet é perfeito para celebrar o momento.`;
+            }
 
-            // Atualiza o resultado
-            resultTitle.textContent = title;
-            resultText.innerHTML = suggestion;
-            
-            // Adiciona um pequeno delay para simular o carregamento da IA
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Aguarde... Analisando Paladar.';
-            recommendationResult.classList.remove('hidden');
-            recommendationResult.classList.add('opacity-0');
+        } else if (mood === 'Animado') {
+            if (cuisine === 'Italiana') {
+                title = 'Polenta com Ragu';
+                suggestion = `O humor <strong>${mood}</strong> pede sabores intensos e diferentes da rotina. Polenta com ragu é ideal.`;
+            } else if (cuisine === 'Japonesa') {
+                title = 'Takoyaki ou Okonomiyaki';
+                suggestion = `O humor <strong>${mood}</strong> combina com comidas de rua japonesas como Takoyaki ou Okonomiyaki.`;
+            } else {
+                title = 'Comida de Rua Tailandesa ou Coreana';
+                suggestion = `O humor <strong>${mood}</strong> chama por experiências exóticas e picantes.`;
+            }
 
-            setTimeout(() => {
-                // Exibe o resultado após o "processamento"
-                resultSection.classList.remove('hidden');
-                recommendationResult.classList.remove('opacity-0');
-
-                // Atualiza a barra de rodapé da simulação
-                document.querySelector('.result-card > div:last-child').innerHTML = `Motivado por: ${mood}, ${cuisine}, ${notes}`;
-
-                // Restaura o botão
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Gerar Sugestão Gourmet ✨';
-            }, 1000); // 1 segundo de simulação de loading
-
-             // Remove o estilo de alerta
-            recommendationResult.classList.remove('bg-yellow-50', 'border-yellow-300');
-            recommendationResult.classList.add('bg-white', 'border-gray-200');
-
+        } else if (mood === 'Neutro') {
+            if (cuisine === 'Italiana') {
+                title = 'Lasanha à Bolonhesa';
+                suggestion = `O humor <strong>${mood}</strong> e a culinária Italiana combinam com uma lasanha aconchegante.`;
+            } else if (cuisine === 'Japonesa') {
+                title = 'Karê Japonês';
+                suggestion = `O humor <strong>${mood}</strong> combina com o curry japonês (Karê), suave e equilibrado.`;
+            } else {
+                title = 'Strogonoff Clássico';
+                suggestion = `O humor <strong>${mood}</strong> pede um prato familiar e acolhedor como Strogonoff.`;
+            }
         }
 
-        // Inicializa a seleção de humor ao carregar a página
-        window.onload = setupMoodSelector;
+        // ------------ DEIXA PALAVRAS EM NEGRITO ------------
+        suggestion = suggestion
+            .replace(/Cansado/gi, '<strong>Cansado</strong>')
+            .replace(/Feliz/gi, '<strong>Feliz</strong>')
+            .replace(/Animado/gi, '<strong>Animado</strong>')
+            .replace(/Neutro/gi, '<strong>Neutro</strong>');
+
+        // ------------ EXIBE OS RESULTADOS ------------
+        resultTitle.textContent = title;
+        resultText.innerHTML = suggestion;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Aguarde... Analisando Paladar.';
+
+        setTimeout(() => {
+            resultSection.classList.remove('hidden');
+            document.querySelector('.result-card > div:last-child').innerHTML =
+                `Motivado por: <strong>${mood}</strong>, ${cuisine}, ${notes}`;
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Gerar Sugestão Gourmet ✨';
+        }, 900);
+
+        recommendationResult.classList.remove('bg-yellow-50', 'border-yellow-300');
+        recommendationResult.classList.add('bg-white', 'border-gray-200');
+    }
+
+    window.onload = setupMoodSelector;
 
     </script>
 </body>
